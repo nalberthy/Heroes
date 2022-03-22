@@ -10,6 +10,9 @@ interface ISearchHeroesParams {
     filter?: string;
 }
 
+interface IcreateHeroParams {
+    data: IHero;
+}
 
 const hero = {
     async listHeroes({order,limit}: IListHeroesParams) {
@@ -66,6 +69,20 @@ const hero = {
             if(result.length != 0) return true;
             return false;
         })
+    },
+    async createHero({data}: IcreateHeroParams) {
+        const service = Service.getInstance();
+        const listHeroes = await this.listHeroes({order: "id"}) 
+        const lastId = listHeroes.at(-1)?.id || 0
+        const newHero = {
+            ...data, 
+            id: lastId+1, 
+            slug: `${lastId+1}-${data.name.split(' ').reduce((a, c, i) => { 
+                return (a[0] != a[i] || a.at(-1) != a[i]) ? `${a}-${c}`: c
+                }, ''  ).toLowerCase()}`
+        }
+        service.createHero(newHero)
+        return newHero;
     }
 }
 

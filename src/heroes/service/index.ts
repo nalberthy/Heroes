@@ -67,6 +67,13 @@ class Service {
             return []
         }
     }
+    createHero(hero: IHero) {
+        if(!this.allSuperHeroes) {
+            this.allSuperHeroes = [hero]
+        }
+
+        return this.allSuperHeroes.push(hero);
+    }
 }
 
 export default Service;
